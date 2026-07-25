@@ -1,0 +1,204 @@
+patients
+──────────────────────────────────────
+uuid (PK)
+
+full_name
+
+phone_number UNIQUE
+
+blood_group
+
+dob
+
+height_cm
+
+weight_kg
+
+allergies JSONB
+
+created_at
+
+updated_at
+
+
+doctors
+──────────────────────────────────────
+uuid (PK)
+
+doctor_name
+
+doctor_phone UNIQUE
+
+hospital_address
+
+specialization
+
+created_at
+
+updated_at
+
+doctor_availability
+──────────────────────────────────────
+availability_uuid (PK)
+
+doctor_uuid (FK)
+
+weekday
+
+start_time
+
+end_time
+
+is_available
+
+appointments
+──────────────────────────────────────
+appointment_uuid (PK)
+
+patient_uuid (FK)
+
+doctor_uuid (FK)
+
+appointment_date
+
+appointment_time
+
+status (pending, confirmed, cancelled, completed) 
+
+created_at
+
+updated_at
+
+medical_records
+──────────────────────────────────────
+medical_record_uuid (PK)
+
+appointment_uuid (FK)
+
+patient_uuid (FK)
+
+doctor_uuid (FK)
+
+diagnosis
+
+symptoms
+
+treatment
+
+notes
+
+created_at
+
+updated_at
+
+prescriptions
+──────────────────────────────────────
+prescription_uuid (PK)
+
+medical_record_uuid (FK)
+
+medicine
+
+dosage
+
+frequency
+
+duration
+
+prescribed_date
+
+lab_reports
+──────────────────────────────────────
+report_uuid (PK)
+
+medical_record_uuid (FK)
+
+report_name
+
+report_url
+
+created_at
+
+
+
+
+ER DIAGRAM
+
+
+                          +----------------------+
+                          |      PATIENTS        |
+                          +----------------------+
+                          | uuid (PK)            |
+                          | full_name            |
+                          | phone_number         |
+                          | blood_group          |
+                          | dob                  |
+                          | height_cm            |
+                          | weight_kg            |
+                          | allergies            |
+                          | created_at           |
+                          | updated_at           |
+                          +----------+-----------+
+                                     |
+                                     | 1
+                                     |
+                                     | *
+                          +----------v-----------+
+                          |    APPOINTMENTS      |
+                          +----------------------+
+                          | appointment_uuid PK  |
+                          | patient_uuid FK      |
+                          | doctor_uuid FK       |
+                          | appointment_date     |
+                          | appointment_time     |
+                          | status               |
+                          | created_at           |
+                          | updated_at           |
+                          +----------+-----------+
+                                     |
+                                     |
+                                     |
+             +-----------------------+----------------------+
+             |                                              |
+             |                                              |
+             |                                              |
+             |                                              |
++------------v------------+                    +------------v------------+
+|        DOCTORS          |                    |    MEDICAL_RECORDS      |
++-------------------------+                    +-------------------------+
+| uuid (PK)               |                    | medical_record_uuid PK  |
+| doctor_name             |                    | appointment_uuid FK     |
+| doctor_phone            |                    | patient_uuid FK         |
+| hospital_address        |                    | doctor_uuid FK          |
+| specialization          |                    | diagnosis               |
+| created_at              |                    | symptoms                |
+| updated_at              |                    | treatment               |
++------------+------------+                    | notes                   |
+             |                                 | created_at              |
+             |                                 | updated_at              |
+             |                                 +------------+------------+
+             |                                              |
+             |                                              |
+             |                                              |
++------------v-------------+                  +-------------+-------------+
+|  DOCTOR_AVAILABILITY     |                  |                           |
++--------------------------+                  |                           |
+| availability_uuid PK     |                  |                           |
+| doctor_uuid FK           |                  |                           |
+| weekday                  |                  |                           |
+| start_time               |                  |                           |
+| end_time                 |                  |                           |
+| is_available             |                  |                           |
++--------------------------+                  |                           |
+                                              |                           |
+                                  +-----------v----------+     +----------v-----------+
+                                  |    PRESCRIPTIONS     |     |     LAB_REPORTS      |
+                                  +----------------------+     +----------------------+
+                                  | prescription_uuid PK |     | report_uuid PK       |
+                                  | medical_record_uuid  |     | medical_record_uuid  |
+                                  | medicine             |     | report_name          |
+                                  | dosage               |     | report_url           |
+                                  | frequency            |     | created_at           |
+                                  | duration             |     +----------------------+
+                                  | prescribed_date      |
+                                  +----------------------+

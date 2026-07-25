@@ -1,0 +1,30 @@
+project_strcture
+
+medical_interoperability/
+│
+├── assets/
+├           ├──medical_interporability_full_image.png
+├           ├──medical_interporability_tranparent_bg_1.png
+├── pages/
+├           ├──1_Analytics.py
+│
+├── queries/
+├           ├──patient_table.sql
+├           ├──doctor_table.sql
+├           ├──doctor_availability_table.sql
+├           ├──appointment_table.sql
+├           ├──db_master.sql
+├           ├──tests/
+├           ├          ├──test_queries.sql
+├
+├── services/
+├           ├──analytics_service.py
+├           ├──supbase_service.py
+│
+├── scripts/
+├           ├──seed_db.py
+│
+├── app.py
+├── db_schema.txt
+└── schema_design.txt
+└── .gitignore

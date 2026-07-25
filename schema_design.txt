@@ -1,0 +1,270 @@
+=========================================================
+               MEDICAL INTEROPERABILITY DATABASE SCHEMA
+=========================================================
+
+MODULES
+-------
+1. Admin
+2. Doctor
+3. Patient
+
+
+=========================================================
+TABLE: patients
+=========================================================
+
+Primary Key:
+-------------
+uuid (UUID)
+
+Columns:
+--------
+patient_id          INTEGER / SERIAL (Optional Internal ID)
+full_name           TEXT
+phone_number        TEXT UNIQUE
+created_at          TIMESTAMP
+blood_group         TEXT
+dob                 DATE
+age                 (Derived from DOB)
+allergies           JSONB
+height_cm           DECIMAL
+weight_kg           DECIMAL
+
+
+Example allergies JSON
+
+[
+    "Penicillin",
+    "Dust",
+    "Peanuts"
+]
+
+
+=========================================================
+TABLE: doctors
+=========================================================
+
+Primary Key:
+-------------
+uuid (UUID)
+
+Columns:
+--------
+doctor_id           INTEGER / SERIAL (Optional Internal ID)
+doctor_name         TEXT
+doctor_phone        TEXT UNIQUE
+created_at          TIMESTAMP
+hospital_address    TEXT
+specialization      TEXT
+
+
+=========================================================
+TABLE: doctor_availability
+=========================================================
+
+Primary Key:
+-------------
+availability_id (UUID)
+
+Foreign Key:
+------------
+doctor_uuid → doctors.uuid
+
+Columns:
+--------
+weekday             TEXT
+start_time          TIME
+end_time            TIME
+is_available        BOOLEAN
+
+
+Example
+
+Monday
+09:00
+17:00
+TRUE
+
+
+=========================================================
+TABLE: appointments
+=========================================================
+
+Primary Key:
+-------------
+appointment_uuid (UUID)
+
+Foreign Keys:
+-------------
+patient_uuid → patients.uuid
+doctor_uuid  → doctors.uuid
+
+Columns:
+--------
+appointment_date    DATE
+appointment_time    TIME
+created_at          TIMESTAMP
+status              TEXT
+
+
+Possible Status Values
+
+Pending
+Confirmed
+Cancelled
+Completed
+
+
+=========================================================
+TABLE: medical_records
+=========================================================
+
+Primary Key:
+-------------
+medical_record_uuid (UUID)
+
+Foreign Keys:
+-------------
+appointment_uuid → appointments.appointment_uuid
+patient_uuid     → patients.uuid
+doctor_uuid      → doctors.uuid
+
+Columns:
+--------
+created_at        TIMESTAMP
+diagnosis         TEXT
+symptoms          TEXT
+treatment         TEXT
+notes             TEXT
+
+
+=========================================================
+TABLE: prescriptions
+=========================================================
+
+Primary Key:
+-------------
+prescription_uuid (UUID)
+
+Foreign Key:
+------------
+medical_record_uuid → medical_records.medical_record_uuid
+
+Columns:
+--------
+medicine           TEXT
+dosage             TEXT
+frequency          TEXT
+duration           TEXT
+prescribed_date    DATE
+
+
+=========================================================
+TABLE: lab_reports
+=========================================================
+
+Primary Key:
+-------------
+report_uuid (UUID)
+
+Foreign Key:
+------------
+medical_record_uuid → medical_records.medical_record_uuid
+
+Columns:
+--------
+report_name        TEXT
+report_url         TEXT
+created_at         TIMESTAMP
+
+
+=========================================================
+RELATIONSHIPS
+=========================================================
+
+Patients
+    │
+    │
+    ├──────────────┐
+    │              │
+    │              ▼
+Appointments ◄────────► Doctors
+    │
+    │
+    ▼
+Medical Records
+    │
+    ├──────────────► Prescriptions
+    │
+    └──────────────► Lab Reports
+
+
+Doctors
+    │
+    ▼
+Doctor Availability
+
+
+=========================================================
+USER FLOW
+=========================================================
+
+Patient
+-------
+• Register
+• Login
+• View Profile
+• Update limited personal information
+• View Medical History
+• View Prescriptions
+• View Lab Reports
+
+
+Doctor
+------
+• Login
+• View Assigned Patients
+• Create Appointment
+• Create Medical Record
+• Add Prescription
+• Upload Lab Report
+• Update Patient Medical Information
+
+
+Admin
+-----
+• Manage Patients
+• Manage Doctors
+• Manage Appointments
+• Manage Hospitals (Future)
+• View Analytics
+• Full CRUD Access
+
+
+=========================================================
+TECH STACK
+=========================================================
+
+Frontend
+---------
+Streamlit
+
+Backend
+--------
+Supabase
+
+Authentication
+--------------
+Supabase Auth
+
+Database
+---------
+PostgreSQL (Supabase)
+
+Storage
+-------
+Supabase Storage (Lab Reports / PDFs)
+
+Security
+--------
+Supabase Row Level Security (RLS)
