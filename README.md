@@ -207,6 +207,7 @@ medical_interpolarbility/
 ├── assets/
 │   ├── medical_interpolarbility_full_image.png
 │   └── medical_interpolarbility_tranparent_bg_1.png
+│   └── medical_interpolator_repo_banner.png
 │
 ├── pages/
 │   └── 1_Analytics.py
