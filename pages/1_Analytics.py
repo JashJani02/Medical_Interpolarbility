@@ -19,6 +19,34 @@ analytics = AnalyticsService()
 
 st.title("📊 Analytics Dashboard")
 st.caption("Complete system-wide analytics for the Medical Interoperability Platform.")
+with st.expander("Dashboard Overview", expanded=False):
+
+    st.markdown("""
+This dashboard provides administrators with a centralized overview of the Medical
+Interoperability Platform.
+
+### What you'll find here
+
+- **Appointment Analytics**
+  - Scheduling trends, appointment lifecycle, completion rates and booking patterns.
+
+- **Doctor & Specialization Analytics**
+  - Doctor workload, department demand and specialization distribution.
+
+- **Patient Analytics**
+  - Patient demographics, blood group distribution and healthcare utilization.
+
+- **Doctor Availability**
+  - Current doctor schedules and staffing availability.
+
+- **Medical Records Analytics**
+  - Diagnosis trends, follow-up workload and clinical documentation statistics.
+
+- **Database Explorer**
+  - Direct access to every major table used throughout the system.
+
+Every visualization is accompanied by automatically generated insights to help administrators identify trends quickly and make informed operational decisions.
+""")
 st.divider()
 
 
@@ -61,6 +89,10 @@ st.divider()
 # APPOINTMENT ANALYTICS
 # ==========================================================
 st.header("📅 Appointment Analytics")
+st.caption(
+    "Monitor appointment activity across the platform, including scheduling trends, "
+    "appointment completion, weekday booking patterns, and specialization demand."
+)
 
 status_df = analytics.get_status_distribution()
 render_graph(
@@ -117,6 +149,10 @@ st.divider()
 # DOCTOR & SPECIALIZATION ANALYTICS
 # ==========================================================
 st.header("🩺 Doctor & Specialization Analytics")
+st.caption(
+    "Understand doctor workload, specialization demand, and department utilization "
+    "to support staffing and operational planning."
+)
 
 spec_dist_df = analytics.get_specialization_distribution()
 render_graph(
@@ -164,9 +200,14 @@ render_graph(
 st.divider()
 
 # ==========================================================
-# PATIENT DEMOGRAPHICS
+# PATIENT ACTIVITY
 # ==========================================================
-st.header("🧑‍🤝‍🧑 Patient Demographics")
+st.header("👥 Patient Analytics")
+
+st.caption(
+    "Explore patient demographics, blood groups, age distribution, "
+    "and healthcare utilization across the platform."
+)
 
 patients = analytics.get_patients()
 if not patients.empty:
@@ -198,13 +239,6 @@ render_graph(
     )(df.sort_values("Patients", ascending=False).iloc[0], df["Patients"].sum())
 )
 
-st.divider()
-
-# ==========================================================
-# PATIENT ACTIVITY
-# ==========================================================
-st.header("👥 Patient Activity")
-
 top_patients_df = analytics.get_top_patients()
 render_graph(
     "Most Frequent Patients", top_patients_df,
@@ -222,6 +256,10 @@ st.divider()
 # DOCTOR AVAILABILITY
 # ==========================================================
 st.header("🗓️ Doctor Availability")
+st.caption(
+    "Review doctor schedules and availability to understand staffing capacity "
+    "and appointment coverage."
+)
 
 availability_df = analytics.get_doctor_availability()
 st.markdown("##### Scheduled Availability Slots")
@@ -242,22 +280,252 @@ else:
 st.divider()
 
 # ==========================================================
+# MEDICAL RECORDS ANALYTICS
+# ==========================================================
+st.header("🩺 Medical Records Analytics")
+st.caption(
+    "Analyze diagnosis trends, clinical documentation, follow-up requirements, "
+    "and patient medical history to monitor healthcare delivery."
+)
+
+medical_kpi = analytics.get_medical_record_kpis()
+
+c1, c2, c3, c4 = st.columns(4)
+
+c1.metric(
+    "📄 Medical Records",
+    medical_kpi["records"]
+)
+
+c2.metric(
+    "🧾 Diagnoses",
+    medical_kpi["diagnoses"]
+)
+
+c3.metric(
+    "🔔 Follow-ups",
+    medical_kpi["followups"]
+)
+
+c4.metric(
+    "👨‍⚕️ Doctors",
+    medical_kpi["doctors"]
+)
+
+diagnosis_df = analytics.get_diagnosis_distribution()
+
+render_graph(
+    "Diagnosis Distribution",
+
+    diagnosis_df,
+
+    "No diagnosis data available.",
+
+    chart_fn=lambda df: px.bar(
+        df,
+        x="Diagnosis",
+        y="Cases",
+        color="Cases"
+    ),
+
+    insight_fn=lambda df: (
+        lambda top, total:
+        f"**{top['Diagnosis']}** is the most common diagnosis with "
+        f"{top['Cases']} medical records "
+        f"({round(top['Cases'] * 100 / total,1)}%)."
+    )(
+        df.sort_values("Cases", ascending=False).iloc[0],
+        df["Cases"].sum()
+    )
+)
+
+spec_df = analytics.get_records_per_specialization()
+
+render_graph(
+    "Medical Records by Specialization",
+
+    spec_df,
+
+    "No specialization data available.",
+
+    chart_fn=lambda df: px.bar(
+        df,
+        x="Specialization",
+        y="Records",
+        color="Records"
+    ),
+
+    insight_fn=lambda df: (
+        lambda top:
+        f"**{top['Specialization']}** has created the highest number "
+        f"of medical records ({top['Records']})."
+    )(
+        df.sort_values(
+            "Records",
+            ascending=False
+        ).iloc[0]
+    )
+)
+
+doctor_df = analytics.get_records_per_doctor()
+
+render_graph(
+    "Medical Records by Doctor",
+
+    doctor_df,
+
+    "No doctor data available.",
+
+    chart_fn=lambda df: px.bar(
+        df,
+        x="Doctor",
+        y="Records",
+        color="Records"
+    ),
+
+    insight_fn=lambda df: (
+        lambda top:
+        f"**{top['Doctor']}** has created the most medical records "
+        f"({top['Records']})."
+    )(
+        df.sort_values(
+            "Records",
+            ascending=False
+        ).iloc[0]
+    )
+)
+
+followup_df = analytics.get_followup_distribution()
+
+render_graph(
+    "Follow-up Distribution",
+
+    followup_df,
+
+    "No follow-up data available.",
+
+    chart_fn=lambda df: px.pie(
+        df,
+        names="Status",
+        values="Records",
+        hole=0.45
+    ),
+
+    insight_fn=lambda df: (
+        lambda top, total:
+        f"**{top['Status']}** accounts for "
+        f"{top['Records']} of {total} medical records "
+        f"({round(top['Records']*100/total,1)}%)."
+    )(
+        df.sort_values(
+            "Records",
+            ascending=False
+        ).iloc[0],
+        df["Records"].sum()
+    )
+)
+
+doctor_followup_df = analytics.get_doctor_followup_stats()
+
+render_graph(
+    "Doctor Follow-up Workload",
+
+    doctor_followup_df,
+
+    "No doctor follow-up data available.",
+
+    chart_fn=lambda df: px.bar(
+        df,
+        x="Doctor",
+        y=[
+            "Total_Records",
+            "Followups"
+        ],
+        barmode="group"
+    ),
+
+    insight_fn=lambda df: (
+        lambda top:
+        f"**{top['Doctor']}** currently has the highest follow-up workload "
+        f"with **{top['Followups']}** scheduled follow-ups."
+    )(
+        df.sort_values(
+            "Followups",
+            ascending=False
+        ).iloc[0]
+    )
+)
+
+patient_records_df = analytics.get_records_per_patient()
+
+render_graph(
+    "Medical Records per Patient",
+
+    patient_records_df,
+
+    "No patient medical records available.",
+
+    chart_fn=lambda df: px.bar(
+        df,
+        x="Patient",
+        y="Records",
+        color="Records"
+    ),
+
+    insight_fn=lambda df: (
+        lambda top:
+        f"**{top['Patient']}** has the highest number of recorded medical visits ({top['Records']})."
+    )(
+        df.sort_values(
+            "Records",
+            ascending=False
+        ).iloc[0]
+    )
+)
+
+st.markdown("##### Upcoming Follow-ups")
+
+followup_table = analytics.get_upcoming_followups()
+
+if followup_table.empty:
+
+    st.info("No follow-up appointments scheduled.")
+
+else:
+
+    st.dataframe(
+        followup_table,
+        use_container_width=True,
+        hide_index=True
+    )
+
+    st.info(
+        f"There are **{len(followup_table)}** patients requiring follow-up care."
+    )
+st.divider()
+# ==========================================================
 # DATABASE TABLES
 # ==========================================================
 st.subheader("🗄 Database Explorer")
+st.caption(
+    "Browse the underlying database tables that power the analytics dashboard "
+    "for auditing, verification, and manual inspection."
+)
 
-patients_tab, doctors_tab, appointments_tab, availability_tab = st.tabs(
-    ["Patients", "Doctors", "Appointments", "Doctor Availability"]
+patients_tab, doctors_tab, availability_tab, appointments_tab, medical_tab = st.tabs(
+    ["Patients","Doctors","Doctor Availability","Appointments","Medical Records",]
 )
 
 with patients_tab:
     st.dataframe(analytics.get_patients(), use_container_width=True, hide_index=True)
 with doctors_tab:
     st.dataframe(analytics.get_doctors(), use_container_width=True, hide_index=True)
-with appointments_tab:
-    st.dataframe(analytics.get_appointments(), use_container_width=True, hide_index=True)
 with availability_tab:
     st.dataframe(analytics.get_doctor_availability(), use_container_width=True, hide_index=True)
+with appointments_tab:
+    st.dataframe(analytics.get_appointments(), use_container_width=True, hide_index=True)
+with medical_tab:
+    st.dataframe(analytics.get_medical_records(),use_container_width=True,hide_index=True)
 
 st.divider()
 

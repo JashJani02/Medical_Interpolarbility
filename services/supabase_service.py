@@ -20,11 +20,12 @@ class SupabaseService:
             try:
                 url = st.secrets["supabase"]["SUPABASE_URL"]
                 key = st.secrets["supabase"]["SUPABASE_SERVICE_KEY"]
-        
+
             except Exception:
+
                 PROJECT_ROOT = Path(__file__).resolve().parent.parent
                 SECRETS_FILE = PROJECT_ROOT / ".streamlit" / "secret.toml"
-    
+
                 if not SECRETS_FILE.exists():
                     raise FileNotFoundError(
                         f"Could not find:\n{SECRETS_FILE}"
@@ -32,7 +33,7 @@ class SupabaseService:
 
 
                 secrets = tomllib.loads(SECRETS_FILE.read_text())
-    
+
                 url = secrets["supabase"]["SUPABASE_URL"]
                 key = secrets["supabase"]["SUPABASE_SERVICE_KEY"]
 

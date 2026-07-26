@@ -348,3 +348,182 @@ SELECT
 
     (SELECT COUNT(*) FROM appointments
         WHERE status='Cancelled') AS cancelled;
+
+-- Most Common Diagnoses
+SELECT
+    diagnosis,
+    COUNT(*) AS total_cases
+FROM medical_records
+GROUP BY diagnosis
+ORDER BY total_cases DESC;
+
+-- diagnoses by doctor
+SELECT
+
+    d.doctor_name,
+
+    COUNT(m.id) AS records_created
+
+FROM medical_records m
+
+JOIN doctors d
+ON d.id = m.doctor_id
+
+GROUP BY
+    d.doctor_name
+
+ORDER BY
+    records_created DESC;
+
+-- Diagnoses by Specialization
+SELECT
+
+    d.specialization,
+
+    COUNT(*) AS diagnoses
+
+FROM medical_records m
+
+JOIN doctors d
+ON d.id = m.doctor_id
+
+GROUP BY
+    d.specialization
+
+ORDER BY
+    diagnoses DESC;
+
+-- daily medical records trend
+SELECT
+
+    DATE(created_at) AS record_date,
+
+    COUNT(*) AS records
+
+FROM medical_records
+
+GROUP BY
+    DATE(created_at)
+
+ORDER BY
+    record_date;
+
+-- patient requiring follow-up
+SELECT
+
+    p.patient_name,
+
+    d.doctor_name,
+
+    diagnosis,
+
+    follow_up_date
+
+FROM medical_records m
+
+JOIN patients p
+ON p.id = m.patient_id
+
+JOIN doctors d
+ON d.id = m.doctor_id
+
+WHERE follow_up_required = TRUE
+
+ORDER BY
+    follow_up_date;
+
+-- follow-up statistics
+SELECT
+
+    follow_up_required,
+
+    COUNT(*) AS total
+
+FROM medical_records
+
+GROUP BY
+    follow_up_required;
+
+-- patient medical history count
+SELECT
+
+    p.patient_name,
+
+    COUNT(*) AS medical_records
+
+FROM medical_records m
+
+JOIN patients p
+ON p.id = m.patient_id
+
+GROUP BY
+    p.patient_name
+
+ORDER BY
+    medical_records DESC;
+
+-- doctor follow-up rate
+SELECT
+
+    d.doctor_name,
+
+    COUNT(*) AS total_records,
+
+    SUM(
+        CASE
+            WHEN follow_up_required
+            THEN 1
+            ELSE 0
+        END
+    ) AS followups
+
+FROM medical_records m
+
+JOIN doctors d
+ON d.id = m.doctor_id
+
+GROUP BY
+    d.doctor_name
+
+ORDER BY
+    followups DESC;
+
+-- diagnosis timeline
+SELECT
+
+    DATE(created_at) AS date,
+
+    diagnosis,
+
+    COUNT(*) AS total
+
+FROM medical_records
+
+GROUP BY
+
+    DATE(created_at),
+
+    diagnosis
+
+ORDER BY
+
+    date;
+
+-- med records dashboard kpi
+SELECT
+
+COUNT(*) AS total_records,
+
+COUNT(DISTINCT patient_id) AS patients,
+
+COUNT(DISTINCT doctor_id) AS doctors,
+
+SUM(
+    CASE
+        WHEN follow_up_required
+        THEN 1
+        ELSE 0
+    END
+) AS followups
+
+FROM medical_records;
