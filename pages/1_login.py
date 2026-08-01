@@ -31,7 +31,10 @@ if "code" in params:
     try:
 
         result = auth.supabase.auth.exchange_code_for_session(
-            {"auth_code": params["code"]}
+            {
+                "auth_code": params["code"],
+                "redirect_to": auth.get_redirect_url(),
+            }
         )
 
         #print("LOGIN CLIENT:", id(auth.supabase))

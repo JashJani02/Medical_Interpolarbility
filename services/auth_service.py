@@ -14,9 +14,39 @@ import tomllib
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SECRET_FILE = PROJECT_ROOT / ".streamlit" / "secrets.toml"
 
-secrets = tomllib.loads(SECRET_FILE.read_text())
 
-redirect = secrets["supabase"]["SUPABASE_REDIRECT_URL_prod"]
+def _get_redirect_url() -> str:
+    """Resolve the OAuth redirect URL.
+
+    Priority: SUPABASE_REDIRECT_URL (local dev) -> SUPABASE_REDIRECT_URL_prod.
+    Read from st.secrets, falling back to .streamlit/secrets.toml.
+    """
+
+    for key in ("SUPABASE_REDIRECT_URL", "SUPABASE_REDIRECT_URL_prod"):
+        try:
+            url = st.secrets["supabase"].get(key)
+        except Exception:
+            url = None
+        if url:
+            return url
+
+    if not SECRET_FILE.exists():
+        raise RuntimeError(
+            "Missing .streamlit/secrets.toml. Create it with [supabase] "
+            "SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY and SUPABASE_REDIRECT_URL(_prod). "
+            "See the setup steps in the README."
+        )
+
+    secrets = tomllib.loads(SECRET_FILE.read_text())
+
+    for key in ("SUPABASE_REDIRECT_URL", "SUPABASE_REDIRECT_URL_prod"):
+        url = secrets["supabase"].get(key)
+        if url:
+            return url
+
+    raise RuntimeError(
+        "No SUPABASE_REDIRECT_URL set in .streamlit/secrets.toml."
+    )
 
 class AuthService:
 
@@ -35,6 +65,13 @@ class AuthService:
         self.supabase = SupabaseService.get_client()
 
     # =====================================================
+    # OAuth Redirect URL
+    # =====================================================
+
+    def get_redirect_url(self) -> str:
+        return _get_redirect_url()
+
+    # =====================================================
     # Google Login
     # =====================================================
 
@@ -43,7 +80,7 @@ class AuthService:
         credentials = SignInWithOAuthCredentials(
             provider="google",
             options=SignInWithOAuthCredentialsOptions(
-                redirect_to=st.secrets["supabase"]["SUPABASE_REDIRECT_URL_prod"]
+                redirect_to=_get_redirect_url()
             )
         )
 
