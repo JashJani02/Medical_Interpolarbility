@@ -16,7 +16,7 @@ SECRET_FILE = PROJECT_ROOT / ".streamlit" / "secrets.toml"
 
 secrets = tomllib.loads(SECRET_FILE.read_text())
 
-redirect = secrets["supabase"]["SUPABASE_REDIRECT_URL"]
+redirect = secrets["supabase"]["SUPABASE_REDIRECT_URL_PROD"]
 
 class AuthService:
 
@@ -43,7 +43,7 @@ class AuthService:
         credentials = SignInWithOAuthCredentials(
             provider="google",
             options=SignInWithOAuthCredentialsOptions(
-                redirect_to=st.secrets["supabase"]["SUPABASE_REDIRECT_URL"]
+                redirect_to=st.secrets["supabase"]["SUPABASE_REDIRECT_URL_PROD"]
             )
         )
 
@@ -51,7 +51,7 @@ class AuthService:
 
         #print("====================================")
         #print("RSPONSE URL",response.url)
-        #print(st.secrets["supabase"]["SUPABASE_REDIRECT_URL"])
+        #print(st.secrets["supabase"]["SUPABASE_REDIRECT_URL_PROD"])
         #print("=============================")
         if response.url:
 
