@@ -3,3 +3,4 @@ __pycache__
 .streamlit/
 services/__pycache__
 pages/__pycache__
+data/

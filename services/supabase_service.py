@@ -19,12 +19,12 @@ class SupabaseService:
 
             try:
                 url = st.secrets["supabase"]["SUPABASE_URL"]
-                key = st.secrets["supabase"]["SUPABASE_SERVICE_KEY"]
+                key = st.secrets["supabase"]["SUPABASE_PUBLISHABLE_KEY"]
 
             except Exception:
 
                 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-                SECRETS_FILE = PROJECT_ROOT / ".streamlit" / "secret.toml"
+                SECRETS_FILE = PROJECT_ROOT / ".streamlit" / "secrets.toml"
 
                 if not SECRETS_FILE.exists():
                     raise FileNotFoundError(
@@ -35,11 +35,17 @@ class SupabaseService:
                 secrets = tomllib.loads(SECRETS_FILE.read_text())
 
                 url = secrets["supabase"]["SUPABASE_URL"]
-                key = secrets["supabase"]["SUPABASE_SERVICE_KEY"]
+                key = secrets["supabase"]["SUPABASE_PUBLISHABLE_KEY"]
 
+            print("CREATING CLIENT")
+                
             cls._client = create_client(
                 url,
                 key
             )
+
+            #print("SUPABASE SERVICE MODULE")
+            #print("CLIENT SESSION")
+            #print(cls._client.auth.get_session())
 
         return cls._client

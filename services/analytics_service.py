@@ -50,31 +50,62 @@ class AnalyticsService:
             .execute()
             .data
         )
+        #print("getdoctor")
+        #print("=" * 60)
+        #print(data)
+        #print("=" * 60)
 
-        return pd.DataFrame(data)
+        df = pd.DataFrame(data)
+        #print(df.columns.tolist())
+        #print(df.head())
+
+        return df
 
     @st.cache_data(ttl=300)
     def get_appointments(_self) -> pd.DataFrame:
-
-        data = (
+        #print("GETAPPOINTMENTANALYTICSSERVICE")
+        session = _self.supabase.auth.get_session()
+        client = SupabaseService.get_client()
+        #print("CLIENT SESSION:", client.auth.get_session())
+        #print("=" * 60)
+        #print("SESSION:", session)
+        #print("USER:", _self.supabase.auth.get_user())
+        #print("=" * 60)
+        response = (
             _self.supabase
             .table("appointments")
             .select("*")
             .execute()
-            .data
         )
 
+        #print("\n========== RAW RESPONSE ==========")
+        #print(response)
+        #print("==================================")
+
+        data = response.data
+
         df = pd.DataFrame(data)
+
+        #print("\n========== DATAFRAME ==========")
+        #print(df.columns.tolist())
+        #print(df.head())
+        #print(df.shape)
+        #print("================================")
+
+        #print("\n========== SESSION ==========")
+        #print(_self.supabase.auth.get_session())
+        #print("================================")
+
+        #print("\n========== CLIENT ID ==========")
+        #print("ANALYTICS CLIENT:", id(_self.supabase))
+        #print("================================")
 
         if df.empty:
             return df
 
-        df["appointment_date"] = pd.to_datetime(
-            df["appointment_date"]
-        )
+        df["appointment_date"] = pd.to_datetime(df["appointment_date"])
 
         return df
-
     
 
     @st.cache_data(ttl=300)
@@ -118,6 +149,10 @@ class AnalyticsService:
     def get_highlight_text(self) -> str:
 
         appointments = self.get_appointments()
+        #print("=====================")        
+        #print(appointments)
+        #print(appointments.columns)
+        #print("=====================")
 
         if appointments.empty:
             return "No appointment data available."
@@ -1145,3 +1180,186 @@ class AnalyticsService:
         )
 
         return pd.DataFrame(data)
+
+    # ==========================================================
+# Medicine
+# ==========================================================
+
+    @st.cache_data(ttl=300)
+    def get_medicines(_self) -> pd.DataFrame:
+
+        data = (
+            _self.supabase
+            .table("medicines")
+            .select("*")
+            .execute()
+            .data
+        )
+
+        return pd.DataFrame(data)
+
+
+    # ==========================================================
+    # Medicine Inventory
+    # ==========================================================
+
+    @st.cache_data(ttl=300)
+    def get_medicine_inventory(_self) -> pd.DataFrame:
+
+        data = (
+            _self.supabase
+            .table("medicine_inventory")
+            .select("*")
+            .execute()
+            .data
+        )
+
+        return pd.DataFrame(data)
+
+
+    # ==========================================================
+    # Prescriptions
+    # ==========================================================
+
+    @st.cache_data(ttl=300)
+    def get_prescriptions(_self) -> pd.DataFrame:
+
+        data = (
+            _self.supabase
+            .table("prescriptions")
+            .select("*")
+            .execute()
+            .data
+        )
+
+        return pd.DataFrame(data)
+
+
+    # ==========================================================
+    # Lab Reports
+    # ==========================================================
+
+    @st.cache_data(ttl=300)
+    def get_lab_reports(_self) -> pd.DataFrame:
+
+        data = (
+            _self.supabase
+            .table("lab_reports")
+            .select("*")
+            .execute()
+            .data
+        )
+
+        return pd.DataFrame(data)
+
+    def get_inventory_with_medicine(self):
+
+        inventory = self.get_medicine_inventory()
+        medicines = self.get_medicines()
+
+        if inventory.empty:
+            return inventory
+
+        return inventory.merge(
+
+            medicines[
+                [
+                    "id",
+                    "name"
+                ]
+            ].rename(
+    columns={
+        "name": "Medicine"
+    }
+),
+
+            left_on="medicine_id",
+            right_on="id",
+            how="left",
+
+            suffixes=(
+                "",
+                "_medicine"
+            )
+
+        )
+
+    def get_prescriptions_with_names(self):
+
+        prescriptions = self.get_prescriptions()
+
+        if prescriptions.empty:
+            return prescriptions
+
+        medicines = self.get_medicines()
+
+        medical_records = self.get_medical_records()
+
+        return (
+
+            prescriptions
+
+            .merge(
+
+                medicines[
+                    [
+                        "id",
+                        "name"
+                    ]
+                ].rename(columns={"name":"Medicine"}),
+
+                left_on="medicine_id",
+                right_on="id",
+                how="left"
+
+            )
+
+            .merge(
+
+                medical_records[
+                    [
+                        "id",
+                        "diagnosis"
+                    ]
+                ].rename(columns={"diagnosis": "Diagnosis"}),
+
+                left_on="medical_record_uuid",
+                right_on="id",
+                how="left",
+
+                suffixes=(
+                    "",
+                    "_record"
+                )
+
+            )
+
+        )
+
+    def get_lab_reports_with_diagnosis(self):
+
+        reports = self.get_lab_reports()
+
+        if reports.empty:
+            return reports
+
+        medical_records = self.get_medical_records()
+
+        return reports.merge(
+
+            medical_records[
+                [
+                    "id",
+                    "diagnosis"
+                ]
+            ].rename(
+    columns={
+        "diagnosis": "Diagnosis"
+    }
+),
+
+            left_on="medical_record_uuid",
+            right_on="id",
+            how="left"
+
+        )

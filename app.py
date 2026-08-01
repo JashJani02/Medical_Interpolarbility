@@ -1,4 +1,10 @@
 import streamlit as st
+from services.session import SessionManager
+from services.supabase_service import SupabaseService
+
+client = SupabaseService.get_client()
+
+#st.write(client.auth.get_session())
 
 st.set_page_config(
     page_title="Medical Interoperability Dashboard",
@@ -6,6 +12,10 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+SessionManager.initialize()
+
+SessionManager.require_login()
 
 st.title("🏥 Medical Interoperability Dashboard")
 
@@ -18,6 +28,7 @@ This dashboard allows administrators to monitor and analyze the complete healthc
 ### Available Modules
 
 - 📊 Analytics Dashboard
+- 🛡️ Admin Panel (Project Management + Analytics Modules)
 - 👨‍⚕️ Doctor Management *(Coming Soon)*
 - 🧑‍🤝‍🧑 Patient Management *(Coming Soon)*
 - 📅 Appointment Management *(Coming Soon)*

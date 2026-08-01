@@ -15,6 +15,12 @@ st.set_page_config(
     layout="wide"
 )
 
+if not st.session_state.get("logged_in", False):
+
+    st.info("Please Login First")
+
+    st.switch_page("pages/1_login.py")
+
 analytics = AnalyticsService()
 
 st.title("📊 Analytics Dashboard")
@@ -511,21 +517,92 @@ st.caption(
     "Browse the underlying database tables that power the analytics dashboard "
     "for auditing, verification, and manual inspection."
 )
+ 
 
-patients_tab, doctors_tab, availability_tab, appointments_tab, medical_tab = st.tabs(
-    ["Patients","Doctors","Doctor Availability","Appointments","Medical Records",]
-)
+(
+    medicine_tab,
+    inventory_tab,
+    patients_tab,
+    doctors_tab,
+    availability_tab,
+    appointments_tab,
+    medical_tab,
+    prescription_tab,
+    lab_report_tab,
+) = st.tabs([
+    "Medicines",
+    "Medicine Inventory",
+    "Patients",
+    "Doctors",
+    "Doctor Availability",
+    "Appointments",
+    "Medical Records",
+    "Prescriptions",
+    "Lab Reports",
+])
 
 with patients_tab:
-    st.dataframe(analytics.get_patients(), use_container_width=True, hide_index=True)
+    st.dataframe(
+        analytics.get_patients(),
+        use_container_width=True,
+        hide_index=True,
+    )
+
 with doctors_tab:
-    st.dataframe(analytics.get_doctors(), use_container_width=True, hide_index=True)
+    st.dataframe(
+        analytics.get_doctors(),
+        use_container_width=True,
+        hide_index=True,
+    )
+
 with availability_tab:
-    st.dataframe(analytics.get_doctor_availability(), use_container_width=True, hide_index=True)
+    st.dataframe(
+        analytics.get_doctor_availability(),
+        use_container_width=True,
+        hide_index=True,
+    )
+
 with appointments_tab:
-    st.dataframe(analytics.get_appointments(), use_container_width=True, hide_index=True)
+    st.dataframe(
+        analytics.get_appointments(),
+        use_container_width=True,
+        hide_index=True,
+    )
+
 with medical_tab:
-    st.dataframe(analytics.get_medical_records(),use_container_width=True,hide_index=True)
+    st.dataframe(
+        analytics.get_medical_records(),
+        use_container_width=True,
+        hide_index=True,
+    )
+
+with medicine_tab:
+    st.dataframe(
+        analytics.get_medicines(),
+        use_container_width=True,
+        hide_index=True,
+    )
+
+with inventory_tab:
+    st.dataframe(
+        analytics.get_inventory_with_medicine(),
+        use_container_width=True,
+        hide_index=True,
+    )
+
+with prescription_tab:
+    st.dataframe(
+        analytics.get_prescriptions_with_names(),
+        use_container_width=True,
+        hide_index=True,
+    )
+
+with lab_report_tab:
+    st.dataframe(
+        analytics.get_lab_reports_with_diagnosis(),
+        use_container_width=True,
+        hide_index=True,
+    )
 
 st.divider()
 

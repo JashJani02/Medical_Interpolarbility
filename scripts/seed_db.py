@@ -958,200 +958,1316 @@ print("Configuration Loaded Successfully.")
 # Medical Record Generation
 # ==========================================================
 
-print_header("Generating Medical Records")
+# print_header("Generating Medical Records")
 
-medical_records = []
+# medical_records = []
 
-generated = 0
-skipped = 0
+# generated = 0
+# skipped = 0
 
-HIGH_FOLLOW_UP = {
+# HIGH_FOLLOW_UP = {
 
-    "Hypertension",
-    "Diabetes Mellitus",
-    "Fracture",
-    "Arthritis",
-    "Depression",
-    "Anxiety Disorder"
+#     "Hypertension",
+#     "Diabetes Mellitus",
+#     "Fracture",
+#     "Arthritis",
+#     "Depression",
+#     "Anxiety Disorder"
+
+# }
+
+# for appointment in appointments:
+
+#     # ------------------------------------------------------
+#     # Only completed appointments generate records
+#     # ------------------------------------------------------
+
+#     if appointment["status"] != "Completed":
+#         continue
+
+#     # ------------------------------------------------------
+#     # Skip existing records
+#     # ------------------------------------------------------
+
+#     if appointment["id"] in existing_appointment_ids:
+#         skipped += 1
+#         continue
+
+#     # ------------------------------------------------------
+#     # Fetch doctor
+#     # ------------------------------------------------------
+
+#     doctor = doctor_lookup.get(
+#         appointment["doctor_id"]
+#     )
+
+#     if doctor is None:
+#         continue
+
+#     specialization = doctor["specialization"]
+
+#     # ------------------------------------------------------
+#     # Skip unsupported specializations
+#     # ------------------------------------------------------
+
+#     if specialization not in MEDICAL_CASES:
+#         print(
+#         f"Skipping doctor '{doctor['doctor_name']}' "
+#         f"({specialization}) - no medical cases defined."
+#     )
+
+#         continue
+
+#     # ------------------------------------------------------
+#     # Pick one realistic case
+#     # ------------------------------------------------------
+
+#     case = random.choice(
+#         MEDICAL_CASES[specialization]
+#     )
+
+#     print(
+#     f"Generating record -> "
+#     f"{doctor['doctor_name']} | "
+#     f"{specialization} | "
+#     f"{case['diagnosis']}"
+# )
+
+#     diagnosis = case["diagnosis"]
+
+#     symptom_count = random.randint(
+#     min(2, len(case["symptoms"])),
+#     len(case["symptoms"])
+# )
+
+#     symptoms = ", ".join(
+#         random.sample(
+#             case["symptoms"],
+#             k=symptom_count
+#         )
+#     )
+
+#     treatment = case["treatment"]
+
+#     notes = random.choice(
+#         case["notes"]
+#     )
+
+#     if diagnosis in HIGH_FOLLOW_UP:
+#         follow_up_required = random.random() < 0.80
+#     else:
+#         follow_up_required = random.random() < 0.25
+
+#     follow_up_date = None
+
+#     if follow_up_required:
+
+#         appointment_date = appointment["appointment_date"]
+
+#         if isinstance(appointment_date, str):
+#             appointment_date = date.fromisoformat(
+#                 appointment_date
+#             )
+
+#         if diagnosis == "Fracture":
+
+#             days = random.randint(14, 45)
+
+#         elif diagnosis in {
+#             "Hypertension",
+#             "Diabetes Mellitus"
+#         }:
+
+#             days = random.randint(30, 90)
+
+#         else:
+
+#             days = random.randint(7, 30)
+
+#         follow_up_date = (
+#             appointment_date + timedelta(days=days)
+#         ).isoformat()
+
+#     # ------------------------------------------------------
+#     # Store Record
+#     # ------------------------------------------------------
+
+#     medical_records.append(
+
+#             {
+
+#                 "appointment_id": appointment["id"],
+
+#                 "patient_id": appointment["patient_id"],
+
+#                 "doctor_id": appointment["doctor_id"],
+
+#                 "diagnosis": diagnosis,
+
+#                 "symptoms": symptoms,
+
+#                 "treatment": treatment,
+
+#                 "notes": notes,
+
+#                 "follow_up_required": follow_up_required,
+
+#                 "follow_up_date": follow_up_date
+
+#             }
+
+#         )
+
+#     generated += 1
+
+
+# # ----------------------------------------------------------
+# # Upload
+# # ----------------------------------------------------------
+
+# print()
+# print("=" * 60)
+# print("Medical Record Summary")
+# print("=" * 60)
+
+# print(f"Medical Records Generated : {generated}")
+# print(f"Skipped Existing Records  : {skipped}")
+# print(f"Uploading : {len(medical_records)}")
+# if medical_records:
+
+#     response = (
+
+#         supabase
+#         .table("medical_records")
+#         .insert(medical_records)
+#         .execute()
+
+#     )
+
+#     print(
+#         f"Inserted {len(response.data)} medical records."
+#     )
+
+# else:
+
+#     print(
+#         "No new medical records to insert."
+#     )
+
+# print_header("Part 3 Complete")
+
+# ==========================================================
+# PART 4
+# Medicine Master Generation
+# ==========================================================
+
+# print_header("Generating Medicine Master")
+
+# MEDICINE_MASTER = [
+
+#     {
+#         "name": "Paracetamol",
+#         "generic_name": "Acetaminophen",
+#         "strength": "500 mg",
+#         "dosage_form": "Tablet",
+#         "manufacturer": "Sun Pharma",
+#         "description": "Analgesic and antipyretic."
+#     },
+
+#     {
+#         "name": "Ibuprofen",
+#         "generic_name": "Ibuprofen",
+#         "strength": "400 mg",
+#         "dosage_form": "Tablet",
+#         "manufacturer": "Cipla",
+#         "description": "NSAID used for pain and inflammation."
+#     },
+
+#     {
+#         "name": "Azithromycin",
+#         "generic_name": "Azithromycin",
+#         "strength": "500 mg",
+#         "dosage_form": "Tablet",
+#         "manufacturer": "Alembic",
+#         "description": "Macrolide antibiotic."
+#     },
+
+#     {
+#         "name": "Cetirizine",
+#         "generic_name": "Cetirizine",
+#         "strength": "10 mg",
+#         "dosage_form": "Tablet",
+#         "manufacturer": "Dr. Reddy's",
+#         "description": "Antihistamine for allergy relief."
+#     },
+
+#     {
+#         "name": "Amoxicillin",
+#         "generic_name": "Amoxicillin",
+#         "strength": "500 mg",
+#         "dosage_form": "Capsule",
+#         "manufacturer": "Mankind",
+#         "description": "Broad-spectrum penicillin antibiotic."
+#     },
+
+#     {
+#         "name": "Vitamin D3",
+#         "generic_name": "Cholecalciferol",
+#         "strength": "60000 IU",
+#         "dosage_form": "Capsule",
+#         "manufacturer": "Cipla",
+#         "description": "Vitamin D supplement."
+#     },
+
+#     {
+#         "name": "Calcium Tablets",
+#         "generic_name": "Calcium Carbonate",
+#         "strength": "500 mg",
+#         "dosage_form": "Tablet",
+#         "manufacturer": "Abbott",
+#         "description": "Calcium supplementation."
+#     },
+
+#     {
+#         "name": "Pantoprazole",
+#         "generic_name": "Pantoprazole",
+#         "strength": "40 mg",
+#         "dosage_form": "Tablet",
+#         "manufacturer": "Sun Pharma",
+#         "description": "Proton pump inhibitor."
+#     },
+
+#     {
+#         "name": "ORS",
+#         "generic_name": "Oral Rehydration Salts",
+#         "strength": "WHO Formula",
+#         "dosage_form": "Powder",
+#         "manufacturer": "WHO",
+#         "description": "Oral rehydration therapy."
+#     },
+
+#     {
+#         "name": "Metformin",
+#         "generic_name": "Metformin Hydrochloride",
+#         "strength": "500 mg",
+#         "dosage_form": "Tablet",
+#         "manufacturer": "USV",
+#         "description": "Antidiabetic medication."
+#     },
+
+#     {
+#         "name": "Amlodipine",
+#         "generic_name": "Amlodipine",
+#         "strength": "5 mg",
+#         "dosage_form": "Tablet",
+#         "manufacturer": "Torrent Pharma",
+#         "description": "Calcium channel blocker."
+#     },
+
+#     {
+#         "name": "Salbutamol",
+#         "generic_name": "Salbutamol",
+#         "strength": "100 mcg",
+#         "dosage_form": "Inhaler",
+#         "manufacturer": "GSK",
+#         "description": "Bronchodilator."
+#     }
+
+# ]
+
+# # ----------------------------------------------------------
+# # Existing Medicines
+# # ----------------------------------------------------------
+
+# existing_medicines = (
+
+#     supabase
+#     .table("medicines")
+#     .select(
+#         "name,generic_name,strength,dosage_form"
+#     )
+#     .execute()
+#     .data
+
+# )
+
+# existing_keys = {
+
+#     (
+#         row["name"],
+#         row["generic_name"],
+#         row["strength"],
+#         row["dosage_form"]
+#     )
+
+#     for row in existing_medicines
+
+# }
+
+# # ----------------------------------------------------------
+# # Filter Already Existing
+# # ----------------------------------------------------------
+
+# new_medicines = []
+
+# for medicine in MEDICINE_MASTER:
+
+#     key = (
+
+#         medicine["name"],
+#         medicine["generic_name"],
+#         medicine["strength"],
+#         medicine["dosage_form"]
+
+#     )
+
+#     if key not in existing_keys:
+
+#         new_medicines.append(medicine)
+
+# # ----------------------------------------------------------
+# # Upload
+# # ----------------------------------------------------------
+
+# if new_medicines:
+
+#     response = (
+
+#         supabase
+#         .table("medicines")
+#         .insert(new_medicines)
+#         .execute()
+
+#     )
+
+#     print(
+#         f"Inserted {len(response.data)} medicines."
+#     )
+
+# else:
+
+#     print(
+#         "Medicine master already populated."
+#     )
+
+# print_header("Part 4 Complete")
+
+# ==========================================================
+# PART 5
+# Medicine Inventory Generation
+# ==========================================================
+
+# print_header("Generating Medicine Inventory")
+
+# # ----------------------------------------------------------
+# # Load Medicine Master
+# # ----------------------------------------------------------
+
+# medicines = (
+#     supabase
+#     .table("medicines")
+#     .select("*")
+#     .execute()
+#     .data
+# )
+
+# # ----------------------------------------------------------
+# # Existing Inventory
+# # ----------------------------------------------------------
+
+# existing_inventory = (
+#     supabase
+#     .table("medicine_inventory")
+#     .select("batch_number")
+#     .execute()
+#     .data
+# )
+
+# existing_batches = {
+
+#     row["batch_number"]
+
+#     for row in existing_inventory
+
+# }
+
+# inventory_records = []
+
+# # ----------------------------------------------------------
+# # Generate Inventory
+# # ----------------------------------------------------------
+
+# for medicine in medicines:
+
+#     # each medicine gets between 2–4 batches
+#     batches = random.randint(2, 4)
+
+#     for batch_no in range(1, batches + 1):
+
+#         batch_number = (
+#             f"{medicine['name'][:3].upper()}"
+#             f"-{fake.random_number(digits=5, fix_len=True)}"
+#             f"-{batch_no}"
+#         )
+
+#         if batch_number in existing_batches:
+#             continue
+
+#         expiry_date = (
+#             date.today()
+#             + timedelta(days=random.randint(180, 900))
+#         )
+
+#         quantity = random.randint(
+#             100,
+#             1000
+#         )
+
+#         price = round(
+#             random.uniform(5, 500),
+#             2
+#         )
+
+#         inventory_records.append(
+
+#             {
+
+#                 "medicine_id": medicine["id"],
+
+#                 "batch_number": batch_number,
+
+#                 "expiry_date": expiry_date.isoformat(),
+
+#                 "quantity_in_stock": quantity,
+
+#                 "unit_price": price
+
+#             }
+
+#         )
+
+# # ----------------------------------------------------------
+# # Upload
+# # ----------------------------------------------------------
+
+# if inventory_records:
+
+#     response = (
+
+#         supabase
+#         .table("medicine_inventory")
+#         .insert(inventory_records)
+#         .execute()
+
+#     )
+
+#     print(
+#         f"Inserted {len(response.data)} inventory batches."
+#     )
+
+# else:
+
+#     print(
+#         "Medicine inventory already populated."
+#     )
+
+# print_header("Part 5 Complete")
+
+
+#! This will now be the single source of truth for all future parts
+#! Updates to this part is to be revised
+#! older parts are to be considered......READ-ONLY
+MEDICAL_KNOWLEDGE = {
+
+    "Common Cold": {
+
+        "symptoms": [
+            "Runny nose",
+            "Sneezing",
+            "Sore throat",
+            "Low-grade fever"
+        ],
+
+        "treatment":
+            "Adequate hydration, steam inhalation, rest and symptomatic treatment.",
+
+        "labs": [
+            "Complete Blood Count"
+        ],
+
+        "follow_up_days": 7,
+
+        "medicines": [
+
+            {
+                "name": "Paracetamol",
+                "dosage": "500 mg",
+                "frequency": "Every 6 hours",
+                "duration": "5 Days",
+                "instructions": "After food"
+            },
+
+            {
+                "name": "Cetirizine",
+                "dosage": "10 mg",
+                "frequency": "Once Daily",
+                "duration": "5 Days",
+                "instructions": "Take at bedtime"
+            }
+
+        ]
+
+    },
+
+    "Viral Fever": {
+
+        "symptoms": [
+            "High fever",
+            "Body ache",
+            "Fatigue",
+            "Headache"
+        ],
+
+        "treatment":
+            "Hydration, bed rest and antipyretics.",
+
+        "labs": [
+            "Complete Blood Count"
+        ],
+
+        "follow_up_days": 5,
+
+        "medicines": [
+
+            {
+                "name": "Paracetamol",
+                "dosage": "650 mg",
+                "frequency": "Every 6 hours",
+                "duration": "5 Days",
+                "instructions": "After food"
+            },
+
+            {
+                "name": "ORS",
+                "dosage": "200 ml",
+                "frequency": "After every loose stool",
+                "duration": "3 Days",
+                "instructions": None
+            }
+
+        ]
+
+    },
+
+    "Migraine": {
+
+        "symptoms": [
+            "Severe headache",
+            "Photophobia",
+            "Nausea",
+            "Vomiting"
+        ],
+
+        "treatment":
+            "Pain management and adequate hydration.",
+
+        "labs": [],
+
+        "follow_up_days": 14,
+
+        "medicines": [
+
+            {
+                "name": "Ibuprofen",
+                "dosage": "400 mg",
+                "frequency": "Twice Daily",
+                "duration": "5 Days",
+                "instructions": "Take after meals"
+            }
+
+        ]
+
+    },
+
+    "Hypertension": {
+
+        "symptoms": [
+            "Headache",
+            "Dizziness",
+            "Blurred vision"
+        ],
+
+        "treatment":
+            "Lifestyle modification with antihypertensive therapy.",
+
+        "labs": [
+            "ECG",
+            "Lipid Profile"
+        ],
+
+        "follow_up_days": 30,
+
+        "medicines": [
+
+            {
+                "name": "Amlodipine",
+                "dosage": "5 mg",
+                "frequency": "Once Daily",
+                "duration": "30 Days",
+                "instructions": "Take every morning"
+            }
+
+        ]
+
+    },
+
+    "Diabetes Mellitus": {
+
+        "symptoms": [
+            "High blood sugar symptoms",
+            "Fatigue",
+            "Frequent urination",
+            "Increased thirst"
+        ],
+
+        "treatment":
+            "Blood sugar control with lifestyle modification.",
+
+        "labs": [
+            "Blood Sugar"
+        ],
+
+        "follow_up_days": 30,
+
+        "medicines": [
+
+            {
+                "name": "Metformin",
+                "dosage": "500 mg",
+                "frequency": "Twice Daily",
+                "duration": "30 Days",
+                "instructions": "After meals"
+            }
+
+        ]
+
+    },
+
+    "Allergic Rhinitis": {
+
+        "symptoms": [
+            "Runny nose",
+            "Sneezing",
+            "Watery eyes",
+            "Nasal congestion"
+        ],
+
+        "treatment":
+            "Avoid allergens and antihistamines.",
+
+        "labs": [],
+
+        "follow_up_days": 14,
+
+        "medicines": [
+
+            {
+                "name": "Cetirizine",
+                "dosage": "10 mg",
+                "frequency": "Once Daily",
+                "duration": "7 Days",
+                "instructions": "Take at bedtime"
+            }
+
+        ]
+
+    },
+
+    "Back Pain": {
+
+        "symptoms": [
+            "Back pain",
+            "Muscle stiffness",
+            "Restricted movement"
+        ],
+
+        "treatment":
+            "NSAIDs and physiotherapy.",
+
+        "labs": [],
+
+        "follow_up_days": 14,
+
+        "medicines": [
+
+            {
+                "name": "Ibuprofen",
+                "dosage": "400 mg",
+                "frequency": "Twice Daily",
+                "duration": "7 Days",
+                "instructions": "After food"
+            }
+
+        ]
+
+    },
+
+    "Fracture": {
+
+        "symptoms": [
+            "Severe limb pain",
+            "Swelling",
+            "Restricted movement"
+        ],
+
+        "treatment":
+            "Immobilization and orthopedic management.",
+
+        "labs": [
+            "X-Ray"
+        ],
+
+        "follow_up_days": 30,
+
+        "medicines": [
+
+            {
+                "name": "Ibuprofen",
+                "dosage": "400 mg",
+                "frequency": "Three Times Daily",
+                "duration": "10 Days",
+                "instructions": "After meals"
+            },
+
+            {
+                "name": "Calcium Tablets",
+                "dosage": "500 mg",
+                "frequency": "Once Daily",
+                "duration": "60 Days",
+                "instructions": "After breakfast"
+            },
+
+            {
+                "name": "Vitamin D3",
+                "dosage": "60000 IU",
+                "frequency": "Once Weekly",
+                "duration": "8 Weeks",
+                "instructions": "After lunch"
+            }
+
+        ]
+
+    },
+
+    "Skin Infection": {
+
+        "symptoms": [
+            "Skin rash",
+            "Redness",
+            "Localized swelling",
+            "Itching"
+        ],
+
+        "treatment":
+            "Antibiotics and local hygiene.",
+
+        "labs": [],
+
+        "follow_up_days": 10,
+
+        "medicines": [
+
+            {
+                "name": "Amoxicillin",
+                "dosage": "500 mg",
+                "frequency": "Three Times Daily",
+                "duration": "7 Days",
+                "instructions": "After meals"
+            }
+
+        ]
+
+    },
+
+    "Asthma": {
+
+        "symptoms": [
+            "Shortness of breath",
+            "Chest tightness",
+            "Persistent cough",
+            "Wheezing"
+        ],
+
+        "treatment":
+            "Bronchodilator therapy.",
+
+        "labs": [],
+
+        "follow_up_days": 14,
+
+        "medicines": [
+
+            {
+                "name": "Salbutamol",
+                "dosage": "2 Puffs",
+                "frequency": "As Needed",
+                "duration": "30 Days",
+                "instructions": "Shake inhaler before use"
+            }
+
+        ]
+
+    },
+
+    "Gastritis": {
+
+        "symptoms": [
+            "Abdominal pain",
+            "Nausea and vomiting",
+            "Heartburn"
+        ],
+
+        "treatment":
+            "Acid suppression and dietary modification.",
+
+        "labs": [],
+
+        "follow_up_days": 14,
+
+        "medicines": [
+
+            {
+                "name": "Pantoprazole",
+                "dosage": "40 mg",
+                "frequency": "Once Daily",
+                "duration": "14 Days",
+                "instructions": "Take before breakfast"
+            }
+
+        ]
+
+    },
+
+    "Sinusitis": {
+
+        "symptoms": [
+            "Facial pain",
+            "Headache",
+            "Nasal congestion"
+        ],
+
+        "treatment":
+            "Steam inhalation and antibiotics if indicated.",
+
+        "labs": [],
+
+        "follow_up_days": 10,
+
+        "medicines": [
+
+            {
+                "name": "Azithromycin",
+                "dosage": "500 mg",
+                "frequency": "Once Daily",
+                "duration": "3 Days",
+                "instructions": "After meals"
+            },
+
+            {
+                "name": "Cetirizine",
+                "dosage": "10 mg",
+                "frequency": "Once Daily",
+                "duration": "5 Days",
+                "instructions": "At bedtime"
+            }
+
+        ]
+
+    },
+
+    "Arthritis": {
+
+        "symptoms": [
+            "Joint pain",
+            "Morning stiffness",
+            "Joint swelling"
+        ],
+
+        "treatment":
+            "NSAIDs with physiotherapy.",
+
+        "labs": [],
+
+        "follow_up_days": 30,
+
+        "medicines": [
+
+            {
+                "name": "Ibuprofen",
+                "dosage": "400 mg",
+                "frequency": "Twice Daily",
+                "duration": "14 Days",
+                "instructions": "After food"
+            },
+
+            {
+                "name": "Calcium Tablets",
+                "dosage": "500 mg",
+                "frequency": "Once Daily",
+                "duration": "60 Days",
+                "instructions": None
+            }
+
+        ]
+
+    },
+
+    "Anxiety Disorder": {
+
+        "symptoms": [
+            "Restlessness",
+            "Difficulty sleeping",
+            "Excessive worrying"
+        ],
+
+        "treatment":
+            "Counselling and behavioural therapy.",
+
+        "labs": [],
+
+        "follow_up_days": 14,
+
+        "medicines": []
+
+    },
+
+    "Depression": {
+
+        "symptoms": [
+            "Persistent sadness",
+            "Fatigue",
+            "Loss of interest"
+        ],
+
+        "treatment":
+            "Psychotherapy and regular follow-up.",
+
+        "labs": [],
+
+        "follow_up_days": 21,
+
+        "medicines": []
+
+    }
 
 }
 
-for appointment in appointments:
+# ==========================================================
+# PART 6
+# Prescription Generation
+# ==========================================================
 
-    # ------------------------------------------------------
-    # Only completed appointments generate records
-    # ------------------------------------------------------
+# print_header("Generating Prescriptions")
 
-    if appointment["status"] != "Completed":
-        continue
+# # ----------------------------------------------------------
+# # Load Medical Records
+# # ----------------------------------------------------------
 
-    # ------------------------------------------------------
-    # Skip existing records
-    # ------------------------------------------------------
+# medical_records = (
+#     supabase
+#     .table("medical_records")
+#     .select("*")
+#     .execute()
+#     .data
+# )
 
-    if appointment["id"] in existing_appointment_ids:
-        skipped += 1
-        continue
+# # ----------------------------------------------------------
+# # Load Medicines
+# # ----------------------------------------------------------
 
-    # ------------------------------------------------------
-    # Fetch doctor
-    # ------------------------------------------------------
+# medicines = (
+#     supabase
+#     .table("medicines")
+#     .select("id,name")
+#     .execute()
+#     .data
+# )
 
-    doctor = doctor_lookup.get(
-        appointment["doctor_id"]
-    )
+# medicine_lookup = {
+#     medicine["name"]: medicine["id"]
+#     for medicine in medicines
+# }
 
-    if doctor is None:
-        continue
+# # ----------------------------------------------------------
+# # Existing Prescriptions
+# # ----------------------------------------------------------
 
-    specialization = doctor["specialization"]
+# existing = (
+#     supabase
+#     .table("prescriptions")
+#     .select("medical_record_uuid")
+#     .execute()
+#     .data
+# )
 
-    # ------------------------------------------------------
-    # Skip unsupported specializations
-    # ------------------------------------------------------
+# already_done = {
+#     row["medical_record_uuid"]
+#     for row in existing
+# }
 
-    if specialization not in MEDICAL_CASES:
-        print(
-        f"Skipping doctor '{doctor['doctor_name']}' "
-        f"({specialization}) - no medical cases defined."
-    )
+# # ----------------------------------------------------------
+# # Generate
+# # ----------------------------------------------------------
 
-        continue
+# prescriptions = []
 
-    # ------------------------------------------------------
-    # Pick one realistic case
-    # ------------------------------------------------------
+# generated = 0
+# skipped = 0
 
-    case = random.choice(
-        MEDICAL_CASES[specialization]
-    )
+# for record in medical_records:
 
-    print(
-    f"Generating record -> "
-    f"{doctor['doctor_name']} | "
-    f"{specialization} | "
-    f"{case['diagnosis']}"
-)
+#     if record["id"] in already_done:
+#         skipped += 1
+#         continue
 
-    diagnosis = case["diagnosis"]
+#     diagnosis = record["diagnosis"]
 
-    symptom_count = random.randint(
-    min(2, len(case["symptoms"])),
-    len(case["symptoms"])
-)
+#     if diagnosis not in MEDICAL_KNOWLEDGE:
+#         continue
 
-    symptoms = ", ".join(
-        random.sample(
-            case["symptoms"],
-            k=symptom_count
-        )
-    )
+#     knowledge = MEDICAL_KNOWLEDGE[diagnosis]
 
-    treatment = case["treatment"]
+#     prescribed_date = (
+#         record["created_at"][:10]
+#         if record.get("created_at")
+#         else date.today().isoformat()
+#     )
 
-    notes = random.choice(
-        case["notes"]
-    )
+#     for med in knowledge["medicines"]:
 
-    if diagnosis in HIGH_FOLLOW_UP:
-        follow_up_required = random.random() < 0.80
-    else:
-        follow_up_required = random.random() < 0.25
+#         medicine_id = medicine_lookup.get(
+#             med["name"]
+#         )
 
-    follow_up_date = None
+#         if medicine_id is None:
+#             print(
+#                 f"Medicine not found -> {med['name']}"
+#             )
+#             continue
 
-    if follow_up_required:
+#         prescriptions.append(
 
-        appointment_date = appointment["appointment_date"]
+#             {
 
-        if isinstance(appointment_date, str):
-            appointment_date = date.fromisoformat(
-                appointment_date
-            )
+#                 "medical_record_uuid": record["id"],
 
-        if diagnosis == "Fracture":
+#                 "medicine_id": medicine_id,
 
-            days = random.randint(14, 45)
+#                 "dosage": med["dosage"],
 
-        elif diagnosis in {
-            "Hypertension",
-            "Diabetes Mellitus"
-        }:
+#                 "frequency": med["frequency"],
 
-            days = random.randint(30, 90)
+#                 "duration": med["duration"],
 
-        else:
+#                 "instructions": med.get(
+#                     "instructions"
+#                 ),
 
-            days = random.randint(7, 30)
+#                 "prescribed_date": prescribed_date
 
-        follow_up_date = (
-            appointment_date + timedelta(days=days)
-        ).isoformat()
+#             }
 
-    # ------------------------------------------------------
-    # Store Record
-    # ------------------------------------------------------
+#         )
 
-    medical_records.append(
+#         generated += 1
 
-            {
+# # ----------------------------------------------------------
+# # Upload
+# # ----------------------------------------------------------
 
-                "appointment_id": appointment["id"],
+# print()
+# print("=" * 60)
+# print("Prescription Summary")
+# print("=" * 60)
 
-                "patient_id": appointment["patient_id"],
+# print(f"Generated : {generated}")
+# print(f"Skipped   : {skipped}")
 
-                "doctor_id": appointment["doctor_id"],
+# if prescriptions:
 
-                "diagnosis": diagnosis,
+#     response = (
+#         supabase
+#         .table("prescriptions")
+#         .insert(prescriptions)
+#         .execute()
+#     )
 
-                "symptoms": symptoms,
+#     print(
+#         f"Inserted {len(response.data)} prescriptions."
+#     )
 
-                "treatment": treatment,
+# else:
 
-                "notes": notes,
+#     print("No new prescriptions to insert.")
 
-                "follow_up_required": follow_up_required,
+# print_header("Part 6 Complete")
 
-                "follow_up_date": follow_up_date
+# ==========================================================
+# PART 7
+# Lab Report Generation
+# ==========================================================
 
-            }
+# print_header("Generating Lab Reports")
 
-        )
+# # ----------------------------------------------------------
+# # Load Medical Records
+# # ----------------------------------------------------------
 
-    generated += 1
+# medical_records = (
 
+#     supabase
+#     .table("medical_records")
+#     .select("*")
+#     .execute()
+#     .data
 
-# ----------------------------------------------------------
-# Upload
-# ----------------------------------------------------------
+# )
 
-print()
-print("=" * 60)
-print("Medical Record Summary")
-print("=" * 60)
+# # ----------------------------------------------------------
+# # Existing Reports
+# # ----------------------------------------------------------
 
-print(f"Medical Records Generated : {generated}")
-print(f"Skipped Existing Records  : {skipped}")
-print(f"Uploading : {len(medical_records)}")
-if medical_records:
+# existing_reports = (
 
-    response = (
+#     supabase
+#     .table("lab_reports")
+#     .select("medical_record_uuid, report_name")
+#     .execute()
+#     .data
 
-        supabase
-        .table("medical_records")
-        .insert(medical_records)
-        .execute()
+# )
 
-    )
+# existing_keys = {
 
-    print(
-        f"Inserted {len(response.data)} medical records."
-    )
+#     (
+#         row["medical_record_uuid"],
+#         row["report_name"]
+#     )
 
-else:
+#     for row in existing_reports
 
-    print(
-        "No new medical records to insert."
-    )
+# }
 
-print_header("Part 3 Complete")
+# # ----------------------------------------------------------
+# # Generate Reports
+# # ----------------------------------------------------------
+
+# lab_reports = []
+
+# generated = 0
+# skipped = 0
+
+# for record in medical_records:
+
+#     diagnosis = record["diagnosis"]
+
+#     if diagnosis not in MEDICAL_KNOWLEDGE:
+#         continue
+
+#     knowledge = MEDICAL_KNOWLEDGE[diagnosis]
+
+#     labs = knowledge.get("labs", [])
+
+#     if len(labs) == 0:
+#         continue
+
+#     created_at = (
+
+#         record["created_at"]
+
+#         if record.get("created_at")
+
+#         else datetime.now().isoformat()
+
+#     )
+
+#     for report_name in labs:
+
+#         key = (
+#             record["id"],
+#             report_name
+#         )
+
+#         if key in existing_keys:
+#             skipped += 1
+#             continue
+
+#         # ------------------------------------------
+#         # Fake report location
+#         # ------------------------------------------
+
+#         safe_name = (
+
+#             report_name
+#             .replace(" ", "_")
+#             .replace("/", "_")
+
+#         )
+
+#         report_url = (
+#             f"reports/{safe_name}/{record['id']}.pdf"
+#         )
+
+#         lab_reports.append(
+
+#             {
+
+#                 "medical_record_uuid": record["id"],
+
+#                 "report_name": report_name,
+
+#                 "report_url": report_url,
+
+#                 "created_at": created_at
+
+#             }
+
+#         )
+
+#         generated += 1
+
+# # ----------------------------------------------------------
+# # Upload
+# # ----------------------------------------------------------
+
+# print()
+
+# print("=" * 60)
+# print("Lab Report Summary")
+# print("=" * 60)
+
+# print(f"Generated : {generated}")
+# print(f"Skipped   : {skipped}")
+
+# if lab_reports:
+
+#     response = (
+
+#         supabase
+#         .table("lab_reports")
+#         .insert(lab_reports)
+#         .execute()
+
+#     )
+
+#     print(
+#         f"Inserted {len(response.data)} lab reports."
+#     )
+
+# else:
+
+#     print(
+#         "No new lab reports to insert."
+#     )
+
+# print_header("Part 7 Complete")

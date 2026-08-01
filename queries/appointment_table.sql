@@ -48,4 +48,34 @@ ON appointments(doctor_id);
 CREATE INDEX idx_appointments_date
 ON appointments(appointment_date);
 
+-- select policy
+CREATE POLICY "Authenticated users can read appointments"
+ON public.appointments
+FOR SELECT
+TO authenticated
+USING (true);
+
+-- insert policy
+CREATE POLICY "Authenticated users can insert appointments"
+ON public.appointments
+FOR INSERT
+TO authenticated
+WITH CHECK (true);
+
+-- update policy
+CREATE POLICY "Authenticated users can update appointments"
+ON public.appointments
+FOR UPDATE
+TO authenticated
+USING (true)
+WITH CHECK (true);
+
+-- delete policy
+CREATE POLICY "Authenticated users can update appointments"
+ON public.appointments
+FOR UPDATE
+TO authenticated
+USING (true)
+WITH CHECK (true);
+
 -- population done via scripts/seed_db.py

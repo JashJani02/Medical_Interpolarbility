@@ -91,19 +91,59 @@ created_at
 
 updated_at
 
+medicines
+────────────── 
+id (PK)
+
+name
+
+generic_name
+
+strength
+
+dosage_form (Tablet, Capsule, Syrup, Injection...)
+
+manufacturer
+
+description
+
+created_at
+
+updated_at
+
+medicine_inventory
+────────────────────────────────────────────
+id (PK)
+
+medicine_id (FK)
+
+batch_number
+
+expiry_date
+
+quantity_in_stock
+
+unit_price
+
+created_at
+
+updated_at
+
 prescriptions
 ──────────────────────────────────────
 prescription_uuid (PK)
 
 medical_record_uuid (FK)
 
-medicine
+medicine_id (FK)
 
 dosage
 
 frequency
 
 duration
+
+instructions -- nullable
 
 prescribed_date
 

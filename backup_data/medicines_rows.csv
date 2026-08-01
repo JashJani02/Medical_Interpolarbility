@@ -1,0 +1,13 @@
+id,name,generic_name,strength,dosage_form,manufacturer,description,created_at,updated_at
+0e604d03-009c-43e3-9a16-15834e08f114,ORS,Oral Rehydration Salts,WHO Formula,Powder,WHO,Oral rehydration therapy.,2026-07-26 17:20:38.804464+00,2026-07-26 17:20:38.804464+00
+18b097b5-d837-424b-854d-0db3b6c06ed2,Ibuprofen,Ibuprofen,400 mg,Tablet,Cipla,NSAID used for pain and inflammation.,2026-07-26 17:20:38.804464+00,2026-07-26 17:20:38.804464+00
+4be48732-3102-4935-ae00-4511d51fbcb3,Azithromycin,Azithromycin,500 mg,Tablet,Alembic,Macrolide antibiotic.,2026-07-26 17:20:38.804464+00,2026-07-26 17:20:38.804464+00
+7dfae36d-21ba-40f3-b288-44379bea17d8,Vitamin D3,Cholecalciferol,60000 IU,Capsule,Cipla,Vitamin D supplement.,2026-07-26 17:20:38.804464+00,2026-07-26 17:20:38.804464+00
+8338cacc-b8ce-4c77-bc03-fc81879f1420,Paracetamol,Acetaminophen,500 mg,Tablet,Sun Pharma,Analgesic and antipyretic.,2026-07-26 17:20:38.804464+00,2026-07-26 17:20:38.804464+00
+8c22855e-d954-481e-bd42-2baf8582b380,Calcium Tablets,Calcium Carbonate,500 mg,Tablet,Abbott,Calcium supplementation.,2026-07-26 17:20:38.804464+00,2026-07-26 17:20:38.804464+00
+b8c93b8c-1455-44bd-8142-8d8af559af4b,Amoxicillin,Amoxicillin,500 mg,Capsule,Mankind,Broad-spectrum penicillin antibiotic.,2026-07-26 17:20:38.804464+00,2026-07-26 17:20:38.804464+00
+b97d9390-a1d5-4aa7-b727-fd7a6f46a455,Cetirizine,Cetirizine,10 mg,Tablet,Dr. Reddy's,Antihistamine for allergy relief.,2026-07-26 17:20:38.804464+00,2026-07-26 17:20:38.804464+00
+c238d0e8-0994-4335-af54-08bf397bdc26,Pantoprazole,Pantoprazole,40 mg,Tablet,Sun Pharma,Proton pump inhibitor.,2026-07-26 17:20:38.804464+00,2026-07-26 17:20:38.804464+00
+c3822ea4-7184-4a57-b51c-35ffa38d9e0b,Metformin,Metformin Hydrochloride,500 mg,Tablet,USV,Antidiabetic medication.,2026-07-26 17:20:38.804464+00,2026-07-26 17:20:38.804464+00
+e1179ffa-e6ff-4768-8efd-54ee5abbe6df,Salbutamol,Salbutamol,100 mcg,Inhaler,GSK,Bronchodilator.,2026-07-26 17:20:38.804464+00,2026-07-26 17:20:38.804464+00
+f964449e-5fe6-4eeb-9152-08b030b7fcd0,Amlodipine,Amlodipine,5 mg,Tablet,Torrent Pharma,Calcium channel blocker.,2026-07-26 17:20:38.804464+00,2026-07-26 17:20:38.804464+00

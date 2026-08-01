@@ -1,0 +1,31 @@
+prescription_uuid,medical_record_uuid,medicine_id,dosage,frequency,duration,instructions,prescribed_date
+04227546-6971-42eb-bf3b-7cc703d7a276,8cf4b226-c81c-4796-8c0d-e8abe312a88c,b8c93b8c-1455-44bd-8142-8d8af559af4b,500 mg,Three Times Daily,7 Days,After meals,2026-07-26
+0ac1e60a-422c-4abd-ad65-080b9910eb19,46ad1c6d-8790-4ad1-aa3e-0c3d07252c13,b8c93b8c-1455-44bd-8142-8d8af559af4b,500 mg,Three Times Daily,7 Days,After meals,2026-07-26
+0db8d606-3787-4639-8c8e-80d0bbd84ed2,24c8b611-d3bc-4ba0-867f-7587e2606a9f,18b097b5-d837-424b-854d-0db3b6c06ed2,400 mg,Three Times Daily,10 Days,After meals,2026-07-26
+2101adf9-b5c3-4682-b16b-a6375ff0aaf3,ef4e68fe-17d4-4675-b1d5-1a0d6bd6c6f4,b97d9390-a1d5-4aa7-b727-fd7a6f46a455,10 mg,Once Daily,5 Days,At bedtime,2026-07-26
+239fe06c-b45d-4d8d-8bad-cbfb06785ff5,03cbc340-3076-4e60-851c-44b7f357a5d8,f964449e-5fe6-4eeb-9152-08b030b7fcd0,5 mg,Once Daily,30 Days,Take every morning,2026-07-26
+2650d0d0-9493-4a00-ba3f-00c864746c9a,569d249a-192f-408d-a69c-1bfe80da0df3,0e604d03-009c-43e3-9a16-15834e08f114,200 ml,After every loose stool,3 Days,,2026-07-26
+2882458d-6e70-40e3-a812-cb2ba805aa33,fb9ddfcf-e068-42a7-b42d-cde6eaa22970,8338cacc-b8ce-4c77-bc03-fc81879f1420,650 mg,Every 6 hours,5 Days,After food,2026-07-26
+3932f3cf-6261-4af4-b3df-94b1da090775,20cf79e3-3b9c-4af3-be9d-25cf017a0fcb,b8c93b8c-1455-44bd-8142-8d8af559af4b,500 mg,Three Times Daily,7 Days,After meals,2026-07-26
+521e2895-e6eb-4569-8533-68af50e898f7,45b14221-6558-4b32-a023-d44bc735b3e1,b97d9390-a1d5-4aa7-b727-fd7a6f46a455,10 mg,Once Daily,5 Days,At bedtime,2026-07-26
+53f9ff90-c696-47b3-aee2-1d403584c7fa,84c41eea-5130-4029-85fe-b8cc267ad130,f964449e-5fe6-4eeb-9152-08b030b7fcd0,5 mg,Once Daily,30 Days,Take every morning,2026-07-26
+5439545b-4210-4dd2-a846-c34362d1bfed,569d249a-192f-408d-a69c-1bfe80da0df3,8338cacc-b8ce-4c77-bc03-fc81879f1420,650 mg,Every 6 hours,5 Days,After food,2026-07-26
+58048214-2986-4d94-b311-d54b0edde02d,836b1bbc-ab66-4e4c-898b-2446710aa672,18b097b5-d837-424b-854d-0db3b6c06ed2,400 mg,Three Times Daily,10 Days,After meals,2026-07-26
+68d74182-b731-4cb6-860e-65b856fffec3,19defa5e-9cfb-495a-b1be-8b7711670a81,8338cacc-b8ce-4c77-bc03-fc81879f1420,650 mg,Every 6 hours,5 Days,After food,2026-07-26
+69934182-b683-4d04-bf08-c36b5607de5c,e63f31f8-330f-400c-a214-d9ffe39755a2,b8c93b8c-1455-44bd-8142-8d8af559af4b,500 mg,Three Times Daily,7 Days,After meals,2026-07-26
+82b2eaad-2bbd-4953-b78a-ba1fc827569e,24c8b611-d3bc-4ba0-867f-7587e2606a9f,7dfae36d-21ba-40f3-b288-44379bea17d8,60000 IU,Once Weekly,8 Weeks,After lunch,2026-07-26
+8cc96a43-1f04-4034-a437-43eaf9cab21d,c4a2c856-eede-4ef2-a904-6a6cafba1310,b8c93b8c-1455-44bd-8142-8d8af559af4b,500 mg,Three Times Daily,7 Days,After meals,2026-07-26
+92968dbc-3dfd-4977-a87a-231624dc6e21,c7538f9d-cf6b-4dd5-b816-6e02fb20c8c9,f964449e-5fe6-4eeb-9152-08b030b7fcd0,5 mg,Once Daily,30 Days,Take every morning,2026-07-26
+962bfd29-f474-4ae0-abca-ae5f913efbca,913d8579-e481-4354-9c9d-b34719716c1a,b8c93b8c-1455-44bd-8142-8d8af559af4b,500 mg,Three Times Daily,7 Days,After meals,2026-07-26
+a9d0af9e-6b73-4d5c-8832-ead340a3deb1,24c8b611-d3bc-4ba0-867f-7587e2606a9f,8c22855e-d954-481e-bd42-2baf8582b380,500 mg,Once Daily,60 Days,After breakfast,2026-07-26
+ba0026cc-6561-49f7-9f92-af942e6045e4,836b1bbc-ab66-4e4c-898b-2446710aa672,8c22855e-d954-481e-bd42-2baf8582b380,500 mg,Once Daily,60 Days,After breakfast,2026-07-26
+ba9ecbaf-eeac-443b-bb72-6cc7606ac783,9ff532d1-3eb2-402e-9afb-19883200cefb,b8c93b8c-1455-44bd-8142-8d8af559af4b,500 mg,Three Times Daily,7 Days,After meals,2026-07-26
+c5aba280-1855-49eb-97d3-9b1de1f1ae24,ef4e68fe-17d4-4675-b1d5-1a0d6bd6c6f4,4be48732-3102-4935-ae00-4511d51fbcb3,500 mg,Once Daily,3 Days,After meals,2026-07-26
+c7539a87-f409-47a1-8a14-5752fa28a765,6ec6389f-48a9-42df-8773-c169abe9cc71,b8c93b8c-1455-44bd-8142-8d8af559af4b,500 mg,Three Times Daily,7 Days,After meals,2026-07-26
+d95a2364-5a9a-43ce-84f0-ebc80a61784a,8af5d954-a623-4042-a68a-7e988cb36428,8338cacc-b8ce-4c77-bc03-fc81879f1420,500 mg,Every 6 hours,5 Days,After food,2026-07-26
+df66f702-ac04-424e-9227-51115d5f8b37,19defa5e-9cfb-495a-b1be-8b7711670a81,0e604d03-009c-43e3-9a16-15834e08f114,200 ml,After every loose stool,3 Days,,2026-07-26
+e70469cc-1a7d-43b5-b8c6-bbe065656a5f,836b1bbc-ab66-4e4c-898b-2446710aa672,7dfae36d-21ba-40f3-b288-44379bea17d8,60000 IU,Once Weekly,8 Weeks,After lunch,2026-07-26
+ea180d2a-4a36-4a5f-b9d3-ac8ab8b372e9,fb9ddfcf-e068-42a7-b42d-cde6eaa22970,0e604d03-009c-43e3-9a16-15834e08f114,200 ml,After every loose stool,3 Days,,2026-07-26
+ede48306-efc8-4925-a10e-16f9660fb412,8af5d954-a623-4042-a68a-7e988cb36428,b97d9390-a1d5-4aa7-b727-fd7a6f46a455,10 mg,Once Daily,5 Days,Take at bedtime,2026-07-26
+f86b30f1-c82b-4ce0-9115-fb117f8ad23f,9e56b4cd-a800-4aef-b2d0-67227b835bda,f964449e-5fe6-4eeb-9152-08b030b7fcd0,5 mg,Once Daily,30 Days,Take every morning,2026-07-26
+fdb8ce8d-48d7-47f5-970e-00d1925d6bb8,45b14221-6558-4b32-a023-d44bc735b3e1,4be48732-3102-4935-ae00-4511d51fbcb3,500 mg,Once Daily,3 Days,After meals,2026-07-26
