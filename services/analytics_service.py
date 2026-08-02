@@ -64,7 +64,6 @@ class AnalyticsService:
     @st.cache_data(ttl=300)
     def get_appointments(_self) -> pd.DataFrame:
         #print("GETAPPOINTMENTANALYTICSSERVICE")
-        session = _self.supabase.auth.get_session()
         client = SupabaseService.get_client()
         #print("CLIENT SESSION:", client.auth.get_session())
         #print("=" * 60)

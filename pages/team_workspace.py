@@ -2,6 +2,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
+from services.session import SessionManager
 from services.supabase_service import SupabaseService
 
 st.set_page_config(
@@ -15,27 +16,15 @@ st.set_page_config(
 # ==========================================================
 
 supabase = SupabaseService.get_client()
-#print("=" * 60)
-#print("TEAM WORKSPACE")
-#print("Client:", id(supabase))
-#print("Session:", supabase.auth.get_session())
-#print("=" * 60)
 
 # ==========================================================
-# Current User
+# Current User (from Google OAuth session)
 # ==========================================================
 
-session = supabase.auth.get_session()
-user_response = supabase.auth.get_user()
+SessionManager.initialize()
 
-#st.write("Current Session")
-#st.write(session)
-
-#st.write("Current User")
-#st.write(user_response)
-
-# Supabase is the source of truth
-if session is None or user_response is None or user_response.user is None:
+# App session is the source of truth
+if not SessionManager.is_logged_in():
 
     st.session_state.logged_in = False
     st.session_state.user = None
@@ -47,18 +36,35 @@ if session is None or user_response is None or user_response.user is None:
     st.stop()
 
 # Session is valid
-user = user_response.user
+user = SessionManager.get_user()
 
 # Keep Streamlit session synchronized
 st.session_state.logged_in = True
 st.session_state.user = user
 
-current_user_id = user.id
+# Tasks are assigned to admin UUIDs (Supabase auth ids). With direct Google
+# OAuth we no longer have a Supabase auth id, so resolve the current user's
+# admin row by email; fall back to the Google oauth_id/email.
+current_user_id = user.get("oauth_id") or user.get("email")
+
+try:
+    admin_row = (
+        supabase
+        .table("admins")
+        .select("id")
+        .eq("email", user.get("email"))
+        .limit(1)
+        .execute()
+    )
+    if admin_row.data:
+        current_user_id = admin_row.data[0]["id"]
+except Exception:
+    pass
 
 display_name = (
-    user.user_metadata.get("full_name")
-    or user.user_metadata.get("name")
-    or user.email
+    user.get("name")
+    or user.get("full_name")
+    or user.get("email")
 )
 
 #st.write("Current Session")

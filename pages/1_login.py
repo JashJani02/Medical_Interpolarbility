@@ -1,15 +1,10 @@
-# this will be in place of 1_Login.py after the admin panel/ project management sub-module is functional
+# Direct Google OAuth login (no Supabase Auth intermediary)
 from __future__ import annotations
 
 import streamlit as st
 
 from services.auth_service import AuthService
 from services.session import SessionManager
-from services.supabase_service import SupabaseService
-
-client = SupabaseService.get_client()
-#print("APP SESSION")
-#print(client.auth.get_session())
 
 # ==========================================================
 # Page Configuration
@@ -23,53 +18,58 @@ st.set_page_config(
 
 auth = AuthService()
 
-params = st.query_params
-#print("Query Params:", dict(st.query_params))
+SessionManager.initialize()
 
-if "code" in params:
+# ==========================================================
+# 1) Already logged in (session state or JWT cookie)
+# ==========================================================
+
+if SessionManager.is_logged_in():
+    st.switch_page("app.py")
+
+cached = auth.google.get_cached_user()
+if cached and auth.google.is_allowed(cached["email"]):
+    SessionManager.login(user=cached)
+    st.query_params.clear()
+    st.rerun()
+
+# ==========================================================
+# 2) OAuth callback: Google redirected back with ?code=...
+# ==========================================================
+
+params = st.query_params
+
+code = params.get("code")
+if code:
+
+    if isinstance(code, list):
+        code = code[0]
 
     try:
 
-        result = auth.supabase.auth.exchange_code_for_session(
-            {
-                "auth_code": params["code"],
-                "redirect_to": auth.get_redirect_url(),
-            }
-        )
+        user = auth.exchange_code(code)
 
-        #print("LOGIN CLIENT:", id(auth.supabase))
+        st.query_params.clear()
 
-        #print("===========================================================")
-        #print("Exchange Result:", result)
-        #print("\n\nSession after exchange:", auth.supabase.auth.get_session(),"\n\n")
-        #print("User after exchange:", auth.get_user())
-        #print("===========================================================")
+        if user and auth.google.is_allowed(user["email"]):
 
-        user = auth.get_user()
+            # persist in a JWT cookie so login survives page refreshes
+            auth.google.persist_user(user)
 
-        if user:
+            SessionManager.login(user=user)
 
-            admin = auth.get_admin()
+            # give the cookie component a moment to write before rerun
+            import time
+            time.sleep(1)
 
-            if admin is None:
+            st.rerun()
 
-                auth.register_admin()
+        else:
 
-                admin = auth.get_admin()
-
-            SessionManager.login(
-                user=user,
-                admin=admin
+            st.error(
+                "Access denied: your Google account is not an authorized "
+                "administrator."
             )
-
-            #print("AFTER SESSIONMANAGER.LOGIN")
-            #print(auth.supabase.auth.get_session(),"\n\n")
-
-            st.query_params.clear()
-
-            #print("SESSION STATE BEFORE SWITCH PAGE")  
-            #print(st.session_state)      
-            st.switch_page("app.py")
 
         st.stop()
 
@@ -78,12 +78,8 @@ if "code" in params:
         st.exception(e)
         st.stop()
 
-SessionManager.initialize()
-
-if SessionManager.is_logged_in():
-    st.switch_page("app.py")
 # ==========================================================
-# Login UI
+# 3) Login UI
 # ==========================================================
 
 st.markdown("# 🔐 Admin Login")
@@ -104,28 +100,24 @@ col1, col2, col3 = st.columns([1, 3, 1])
 
 with col2:
 
-    if st.button(
-        "🔑 Continue with Google",
-        use_container_width=True,
-        type="primary"
-    ):
+    try:
 
-        try:
-           # print("==============================")
-           # print("Before login:")
-           # print(auth.supabase.auth.get_session())
-            #print(st.session_state)
-            auth.login()
-            #print("After redirect:")
-            #print(st.session_state)
-            #print("===============================")
-        except Exception as e:
+        auth_url = auth.google.get_auth_url()
 
-            st.error("Google Authentication is not configured yet.")
+        st.link_button(
+            "🔑 Continue with Google",
+            auth_url,
+            use_container_width=True,
+            type="primary"
+        )
 
-            with st.expander("Developer Details"):
+    except Exception as e:
 
-                st.code(str(e))
+        st.error("Google Authentication is not configured yet.")
+
+        with st.expander("Developer Details"):
+
+            st.code(str(e))
 
 st.divider()
 

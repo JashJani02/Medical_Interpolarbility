@@ -41,8 +41,9 @@ class SessionManager:
     # =====================================================
 
     @staticmethod
-    def login(user, admin=None):
+    def login(user: dict, admin=None):
 
+        # user is now a plain dict: {oauth_id, email, name, ...}
         st.session_state.logged_in = True
 
         st.session_state.user = user
@@ -116,7 +117,8 @@ class SessionManager:
 
             return None
 
-        return user.id
+        # Google OAuth id (or email as fallback)
+        return user.get("oauth_id") or user.get("email")
 
     @staticmethod
     def get_email():
@@ -127,7 +129,7 @@ class SessionManager:
 
             return None
 
-        return user.email
+        return user.get("email")
 
     @staticmethod
     def get_name():
@@ -138,16 +140,10 @@ class SessionManager:
 
             return None
 
-        metadata = user.user_metadata or {}
-
         return (
-
-            metadata.get("full_name")
-
-            or metadata.get("name")
-
-            or user.email
-
+            user.get("name")
+            or user.get("full_name")
+            or user.get("email")
         )
 
 #print("SUPABASE SERVICE MODULE")
